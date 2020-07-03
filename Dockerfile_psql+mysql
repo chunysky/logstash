@@ -1,0 +1,11 @@
+FROM docker.elastic.co/logstash/logstash:7.8.0
+RUN curl -k -L -O https://jdbc.postgresql.org/download/postgresql-42.2.14.jar && \
+    mkdir -p /usr/share/logstash/vendor/jar/jdbc
+WORKDIR /usr/share/logstash/vendor/jar/jdbc
+RUN curl -k -L -O https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.17.tar.gz && \
+    tar -xvf mysql-connector-java-8.0.17.tar.gz && \
+    rm -f mysql-connector-java-8.0.17.tar.gz
+WORKDIR /usr/share/logstash/vendor/jar/jdbc/mysql-connector-java-8.0.17
+RUN mv mysql-connector-java-8.0.17.jar ..
+WORKDIR /usr/share/logstash/bin
+RUN logstash-plugin install logstash-output-jdbc

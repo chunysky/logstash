@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  logstash:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: lunit/logstash:7.8.0
+    container_name: logstash
+    hostname: logstash
+    volumes:
+      - ./config:/usr/share/logstash/config
+      - ./last_run_record:/usr/share/logstash/last_run_record
+    restart: unless-stopped
+    networks:
+      - insight-backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "30"
+
+networks:
+  insight-backend:
+    external:
+      name: insight-backend-network
